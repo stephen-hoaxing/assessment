@@ -1,4 +1,5 @@
-import { ERROR_MESSAGE } from "./constants.js";
+const convertNumberToWords = require("./utils");
+const constants = require("./constants");
 
 const input = document.querySelector(".form-input");
 const btn = document.querySelector(".form-btn");
@@ -13,13 +14,12 @@ input.addEventListener("change", (e) => {
 btn.addEventListener("click", (e) => {
   e.preventDefault();
 
-  const num = parseInt(inputText);
+  const res = convertNumberToWords(inputText);
 
-  if (Number.isNaN(num)) {
+  if (res === constants.ERROR) {
     error.classList.add("active");
   } else {
     error.classList.remove("active");
-    console.log(num);
   }
 
   input.value = "";
