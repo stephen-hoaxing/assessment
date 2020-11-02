@@ -90,6 +90,9 @@ const convertThousands = (num) => {
   } else {
     const firstTwo = Math.floor(num / 100);
     const lastTwo = num % 100;
+    if (lastTwo === 0) {
+      return `${convertTens(firstTwo)} hundred`.trim();
+    }
     return `${convertTens(firstTwo)} hundred and ${convertTens(
       lastTwo
     )}`.trim();

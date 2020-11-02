@@ -42,6 +42,11 @@ describe("Utils", () => {
       const res = convertNumberToWords("943");
       expect(res).to.equal("nine hundred forty-three");
     });
+
+    it("Should return the formatted word for a 3-digit number without tens and ones", () => {
+      const res = convertNumberToWords("1200");
+      expect(res).to.equal("twelve hundred");
+    });
   });
 
   describe("4-digit numbers", () => {
