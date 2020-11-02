@@ -13,9 +13,20 @@ const convertNumberToWords = (num) => {
       return numTable[number];
     case 2:
       return convertTens(number);
+    case 3:
+      return convertHundreds(number);
     default:
       return "Error";
   }
+};
+
+const convertHundreds = (num) => {
+  const hundreds = Math.floor(num / 100) * 100;
+  const tens = num % 100;
+  if (tens > 0 && tens < 10) {
+    return `${numTable[hundreds]} and ${convertTens(tens)}`.trim();
+  }
+  return `${numTable[hundreds]} ${convertTens(tens)}`.trim();
 };
 
 const convertTens = (num) => {
