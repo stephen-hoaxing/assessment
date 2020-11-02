@@ -24,11 +24,13 @@ btn.addEventListener("click", (e) => {
 
   if (res === constants.ERROR) {
     error.classList.add("active");
+    input.classList.add("error-input");
   } else {
     error.classList.remove("active");
-    result.textContent = convertNumberToWords(inputText);
-    console.log(convertNumberToWords(inputText));
+    input.classList.remove("error-input");
   }
+
+  result.textContent = res;
 
   input.value = "";
 });
@@ -49,9 +51,58 @@ const convertNumberToWords = (num) => {
       return numTable[number];
     case 2:
       return convertTens(number);
+    case 3:
+      return convertHundreds(number);
+    case 4:
+      return convertThousands(number);
+    case 5:
+      return convertTenThousands(number);
     default:
-      return "Error";
+      return "This feature is not yet implemented. Please raise a ticket.";
   }
+};
+
+const convertTenThousands = (num) => {
+  if (num % 10000 === 0) {
+    return `${numTable[num]}`;
+  }
+  const tenThousands = Math.floor(num / 10000) * 10000;
+  const thousands = num % 10000;
+  if (thousands < 10) {
+    return `${numTable[tenThousands]} and ${numTable[thousands]}`.trim();
+  }
+  const firstTwo = Math.floor(num / 1000);
+  const hundreds = num % 1000;
+  return `${convertTens(firstTwo)} thousand ${convertThousands(
+    hundreds
+  )}`.trim();
+};
+
+const convertThousands = (num) => {
+  const thousands = Math.floor(num / 1000) * 1000;
+  const hundreds = num % 1000;
+  if (hundreds === 0) {
+    return `${numTable[thousands]}`;
+  } else if (hundreds < 10) {
+    return `${numTable[thousands]} and ${convertTens(hundreds)}`.trim();
+  } else if (hundreds < 100 && hundreds > 10) {
+    return `${numTable[thousands]} ${convertHundreds(hundreds)}`.trim();
+  } else {
+    const firstTwo = Math.floor(num / 100);
+    const lastTwo = num % 100;
+    return `${convertTens(firstTwo)} hundred and ${convertTens(
+      lastTwo
+    )}`.trim();
+  }
+};
+
+const convertHundreds = (num) => {
+  const hundreds = Math.floor(num / 100) * 100;
+  const tens = num % 100;
+  if (tens > 0 && tens < 10) {
+    return `${numTable[hundreds]} and ${convertTens(tens)}`.trim();
+  }
+  return `${numTable[hundreds]} ${convertTens(tens)}`.trim();
 };
 
 const convertTens = (num) => {
@@ -104,6 +155,24 @@ const numTable = {
   700: "seven hundred",
   800: "eight hundred",
   900: "nine hundred",
+  1000: "one thousand",
+  2000: "two thousand",
+  3000: "three thousand",
+  4000: "four thousand",
+  5000: "five thousand",
+  6000: "six thousand",
+  7000: "seven thousand",
+  8000: "eight thousand",
+  9000: "nine thousand",
+  10000: "ten thousand",
+  20000: "twenty thousand",
+  30000: "thirty thousand",
+  40000: "forty thousand",
+  50000: "fifty thousand",
+  60000: "sixty thousand",
+  70000: "seventy thousand",
+  80000: "eighty thousand",
+  90000: "ninety thousand",
 };
 
 module.exports = convertNumberToWords;

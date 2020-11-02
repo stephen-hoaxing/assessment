@@ -18,9 +18,13 @@ btn.addEventListener("click", (e) => {
 
   if (res === constants.ERROR) {
     error.classList.add("active");
+    input.classList.add("error-input");
   } else {
     error.classList.remove("active");
+    input.classList.remove("error-input");
   }
+
+  result.textContent = res;
 
   input.value = "";
 });
