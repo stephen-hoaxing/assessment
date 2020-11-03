@@ -10,6 +10,20 @@ body {
   font-family: "Montserrat", sans-serif;
 }
 
+.header-container {
+  background-color: rgb(66, 66, 66);
+  height: 2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header {
+  color: #fff;
+  margin-left: 20px;
+  font-size: 1.4rem;
+}
+
 .form-container {
   position: relative;
   margin-top: 40px;
@@ -79,6 +93,21 @@ body {
 
 .error-input {
   border: 2px solid red;
+}
+
+.result-container {
+  margin-top: 40px;
+  width: 100%;
+  height: 6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(231, 231, 231);
+}
+
+.result-p {
+  font-size: 1.4rem;
+  text-align: center;
 }
 
 @media screen and (max-width: 1000px) {

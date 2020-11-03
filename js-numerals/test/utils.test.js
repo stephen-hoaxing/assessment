@@ -3,13 +3,20 @@ const convertNumberToWords = require("../utils");
 const constants = require("../constants");
 
 describe("Utils", () => {
-  it("Should return Error when the input is empty", () => {
-    const res = convertNumberToWords("");
-    expect(res).to.equal(constants.ERROR);
+  describe("Errors", () => {
+    it("Should return ERROR when the input is empty", () => {
+      const res = convertNumberToWords("");
+      expect(res).to.equal(constants.ERROR);
+    });
+
+    it("Should return NYI_ERROR when the given number is above 5 digits", () => {
+      const res = convertNumberToWords("100000");
+      expect(res).to.equal(constants.NYI_ERROR);
+    });
   });
 
   describe("1-digit numbers", () => {
-    it("Should return the word for a single-digit number", () => {
+    it("Should return the word for a 1-digit number", () => {
       const res = convertNumberToWords("2");
       expect(res).to.equal("two");
     });
@@ -65,7 +72,7 @@ describe("Utils", () => {
       expect(res).to.equal("nine thousand and nine");
     });
 
-    it("Should return the formatted number for a 4-digit number without hundreds but tens and ones", () => {
+    it("Should return the formatted word for a 4-digit number without hundreds but tens and ones", () => {
       const res = convertNumberToWords("1017");
       expect(res).to.equal("one thousand seventeen");
     });

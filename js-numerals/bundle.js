@@ -1,126 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 const ERROR = "Error";
+const NYI_ERROR = "This feature is not yet implemented. Please raise a ticket.";
 
-module.exports = ERROR;
-
-},{}],2:[function(require,module,exports){
-const convertNumberToWords = require("./utils");
-const constants = require("./constants");
-
-const input = document.querySelector(".form-input");
-const btn = document.querySelector(".form-btn");
-const result = document.querySelector(".result-container");
-const error = document.querySelector(".form-error");
-let inputText;
-
-input.addEventListener("change", (e) => {
-  inputText = e.target.value;
-});
-
-btn.addEventListener("click", (e) => {
-  e.preventDefault();
-
-  const res = convertNumberToWords(inputText);
-
-  if (res === constants.ERROR) {
-    error.classList.add("active");
-    input.classList.add("error-input");
-  } else {
-    error.classList.remove("active");
-    input.classList.remove("error-input");
-  }
-
-  result.textContent = res;
-
-  input.value = "";
-});
-
-},{"./constants":1,"./utils":3}],3:[function(require,module,exports){
-const constants = require("./constants");
-
-const convertNumberToWords = (num) => {
-  const number = parseInt(num);
-  const length = num.length;
-
-  if ((Number, isNaN(number))) {
-    return constants.ERROR;
-  }
-
-  switch (length) {
-    case 1:
-      return numTable[number];
-    case 2:
-      return convertTens(number);
-    case 3:
-      return convertHundreds(number);
-    case 4:
-      return convertThousands(number);
-    case 5:
-      return convertTenThousands(number);
-    default:
-      return "This feature is not yet implemented. Please raise a ticket.";
-  }
-};
-
-const convertTenThousands = (num) => {
-  if (num % 10000 === 0) {
-    return `${numTable[num]}`;
-  }
-  const tenThousands = Math.floor(num / 10000) * 10000;
-  const thousands = num % 10000;
-  if (thousands < 10) {
-    return `${numTable[tenThousands]} and ${numTable[thousands]}`.trim();
-  }
-  const firstTwo = Math.floor(num / 1000);
-  const hundreds = num % 1000;
-  return `${convertTens(firstTwo)} thousand ${convertThousands(
-    hundreds
-  )}`.trim();
-};
-
-const convertThousands = (num) => {
-  const thousands = Math.floor(num / 1000) * 1000;
-  const hundreds = num % 1000;
-  if (hundreds === 0) {
-    return `${numTable[thousands]}`;
-  } else if (hundreds < 10) {
-    return `${numTable[thousands]} and ${convertTens(hundreds)}`.trim();
-  } else if (hundreds < 100 && hundreds > 10) {
-    return `${numTable[thousands]} ${convertHundreds(hundreds)}`.trim();
-  } else {
-    const firstTwo = Math.floor(num / 100);
-    const lastTwo = num % 100;
-    if (lastTwo === 0) {
-      return `${convertTens(firstTwo)} hundred`.trim();
-    }
-    return `${convertTens(firstTwo)} hundred and ${convertTens(
-      lastTwo
-    )}`.trim();
-  }
-};
-
-const convertHundreds = (num) => {
-  const hundreds = Math.floor(num / 100) * 100;
-  const tens = num % 100;
-  if (tens > 0 && tens < 10) {
-    return `${numTable[hundreds]} and ${convertTens(tens)}`.trim();
-  }
-  return `${numTable[hundreds]} ${convertTens(tens)}`.trim();
-};
-
-const convertTens = (num) => {
-  if (num <= 20) {
-    return numTable[num];
-  } else {
-    const tens = Math.floor(num / 10) * 10;
-    const ones = num % 10;
-    return ones === 0
-      ? `${numTable[tens]}`
-      : `${numTable[tens]}-${numTable[ones]}`.trim();
-  }
-};
-
-const numTable = {
+const NUMTABLE = {
   0: "",
   1: "one",
   2: "two",
@@ -176,6 +58,148 @@ const numTable = {
   70000: "seventy thousand",
   80000: "eighty thousand",
   90000: "ninety thousand",
+};
+
+module.exports = { ERROR, NYI_ERROR, NUMTABLE };
+
+},{}],2:[function(require,module,exports){
+const convertNumberToWords = require("./utils");
+const constants = require("./constants");
+
+const input = document.querySelector(".form-input");
+const btn = document.querySelector(".form-btn");
+const result = document.querySelector(".result-container");
+const error = document.querySelector(".form-error");
+let inputText;
+
+input.addEventListener("change", (e) => {
+  inputText = e.target.value;
+});
+
+btn.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  const res = convertNumberToWords(inputText);
+
+  if (res === constants.ERROR) {
+    error.classList.add("active");
+    input.classList.add("error-input");
+  } else {
+    error.classList.remove("active");
+    input.classList.remove("error-input");
+    renderResult(res);
+  }
+  input.value = "";
+  inputText = "";
+});
+
+const renderResult = (res) => {
+  result.innerHTML = "";
+  const resP = document.createElement("p");
+  resP.classList.add("result-p");
+  resP.textContent = res;
+  result.appendChild(resP);
+};
+
+},{"./constants":1,"./utils":3}],3:[function(require,module,exports){
+const constants = require("./constants");
+
+const convertNumberToWords = (num) => {
+  if (num === "" || Number.isNaN(parseInt(num)) || num.length === 0) {
+    return constants.ERROR;
+  }
+
+  const number = parseInt(num);
+  const length = num.length;
+
+  switch (length) {
+    case 1:
+      return constants.NUMTABLE[number];
+    case 2:
+      return convertTens(number);
+    case 3:
+      return convertHundreds(number);
+    case 4:
+      return convertThousands(number);
+    case 5:
+      return convertTenThousands(number);
+    default:
+      return constants.NYI_ERROR;
+  }
+};
+
+const getDecimals = (num, decimals) => {
+  return Math.floor(num / decimals) * decimals;
+};
+
+const getRemainder = (num, decimals) => {
+  return num % decimals;
+};
+
+const getFirstTwoDigits = (num, decimals) => {
+  return Math.floor(num / decimals);
+};
+
+const convertTenThousands = (num) => {
+  if (num % 10000 === 0) {
+    return `${constants.NUMTABLE[num]}`;
+  }
+  const tenThousands = getDecimals(num, 10000);
+  const thousands = getRemainder(num, 10000);
+  if (thousands < 10) {
+    return `${constants.NUMTABLE[tenThousands]} and ${constants.NUMTABLE[thousands]}`.trim();
+  }
+  const firstTwo = getFirstTwoDigits(num, 1000);
+  const hundreds = getRemainder(num, 1000);
+  return `${convertTens(firstTwo)} thousand ${convertThousands(
+    hundreds
+  )}`.trim();
+};
+
+const convertThousands = (num) => {
+  const thousands = getDecimals(num, 1000);
+  const hundreds = getRemainder(num, 1000);
+  if (hundreds === 0) {
+    return `${constants.NUMTABLE[thousands]}`;
+  } else if (hundreds < 10) {
+    return `${constants.NUMTABLE[thousands]} and ${convertTens(
+      hundreds
+    )}`.trim();
+  } else if (hundreds < 100 && hundreds > 10) {
+    return `${constants.NUMTABLE[thousands]} ${convertHundreds(
+      hundreds
+    )}`.trim();
+  } else {
+    const firstTwo = getFirstTwoDigits(num, 100);
+    const lastTwo = getRemainder(num, 100);
+    if (lastTwo === 0) {
+      return `${convertTens(firstTwo)} hundred`.trim();
+    }
+    return `${convertTens(firstTwo)} hundred and ${convertTens(
+      lastTwo
+    )}`.trim();
+  }
+};
+
+const convertHundreds = (num) => {
+  const hundreds = getDecimals(num, 100);
+  const tens = getRemainder(num, 100);
+  if (tens > 0 && tens < 10) {
+    return `${constants.NUMTABLE[hundreds]} and ${convertTens(tens)}`.trim();
+  }
+  return `${constants.NUMTABLE[hundreds]} ${convertTens(tens)}`.trim();
+};
+
+const convertTens = (num) => {
+  if (num <= 20) {
+    return constants.NUMTABLE[num];
+  } else {
+    const tens = getDecimals(num, 10);
+    const ones = getRemainder(num, 10);
+    return ones === 0
+      ? `${constants.NUMTABLE[tens]}`
+      : `${constants.NUMTABLE[tens]}-${constants.NUMTABLE[ones]}`.trim();
+  }
 };
 
 module.exports = convertNumberToWords;

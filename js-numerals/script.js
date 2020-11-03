@@ -22,9 +22,16 @@ btn.addEventListener("click", (e) => {
   } else {
     error.classList.remove("active");
     input.classList.remove("error-input");
+    renderResult(res);
   }
-
-  result.textContent = res;
-
   input.value = "";
+  inputText = "";
 });
+
+const renderResult = (res) => {
+  result.innerHTML = "";
+  const resP = document.createElement("p");
+  resP.classList.add("result-p");
+  resP.textContent = res;
+  result.appendChild(resP);
+};
