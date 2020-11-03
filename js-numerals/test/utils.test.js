@@ -1,11 +1,18 @@
 const expect = require("chai").expect;
 const convertNumberToWords = require("../utils");
 const constants = require("../constants");
+const { Builder, By, until } = require("selenium-webdriver");
+const driver = new Builder().forBrowser("chrome").build();
 
 describe("Utils", () => {
   describe("Errors", () => {
     it("Should return ERROR when the input is empty", () => {
       const res = convertNumberToWords("");
+      expect(res).to.equal(constants.ERROR);
+    });
+
+    it("Should return ERROR when the input is not an integer", () => {
+      const res = convertNumberToWords("3.14");
       expect(res).to.equal(constants.ERROR);
     });
 
@@ -122,6 +129,23 @@ describe("Utils", () => {
     it("Should return the formatted word for a 5-digit number with thousands, hundreds, tens and ones", () => {
       const res = convertNumberToWords("17999");
       expect(res).to.equal("seventeen thousand nine hundred and ninety-nine");
+    });
+  });
+
+  describe("End-To-End Test", () => {
+    before(async () => {
+      (await driver).get("http://127.0.0.1:5501/index.html");
+      (await driver).sleep(10000);
+      (await driver).findElement(By.className("form-input")).sendKeys("1964");
+      const cta = (await driver).findElement(By.className("form-btn"));
+      (await cta).click();
+      driver.wait(until.elementLocated(By.className("result-p")));
+    });
+
+    it("Should enter a valid number, click on the CTA and display the result", async () => {
+      const res = await driver.findElement(By.className("result-p"));
+      const text = await res.getText();
+      expect(text).to.equal("nineteen hundred and sixty-four");
     });
   });
 });

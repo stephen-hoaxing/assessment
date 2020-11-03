@@ -1,12 +1,16 @@
 const constants = require("./constants");
 
 const convertNumberToWords = (num) => {
-  if (num === "" || Number.isNaN(parseInt(num)) || num.length === 0) {
+  if (num === "" || Number.isNaN(parseInt(num)) || num.indexOf(".") !== -1) {
     return constants.ERROR;
   }
 
   const number = parseInt(num);
   const length = num.length;
+
+  if (number === 0) {
+    return "zero";
+  }
 
   switch (length) {
     case 1:

@@ -28,7 +28,7 @@ body {
   position: relative;
   margin-top: 40px;
   width: 100%;
-  height: 20vh;
+  height: 200px;
   background-color: rgb(231, 231, 231);
 }
 
@@ -83,7 +83,7 @@ body {
 .form-error {
   color: red;
   text-align: right;
-  margin-top: 10px;
+  margin: 10px auto;
   display: none;
 }
 
@@ -112,7 +112,7 @@ body {
 
 @media screen and (max-width: 1000px) {
   .form-container {
-    height: 34vh;
+    height: 300px;
   }
 
   .form-input {
