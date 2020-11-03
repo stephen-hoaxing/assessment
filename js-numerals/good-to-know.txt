@@ -1,0 +1,2 @@
+Should you make any changes in the code (.js files), please run "browserify script.js > bundle.js" after implementing the changes.
+Browserify makes possible using the "require".
