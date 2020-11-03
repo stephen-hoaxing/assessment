@@ -27,6 +27,11 @@ describe("Utils", () => {
       const res = convertNumberToWords("2");
       expect(res).to.equal("two");
     });
+
+    it("Should return zero for 0", () => {
+      const res = convertNumberToWords("0");
+      expect(res).to.equal("zero");
+    });
   });
 
   describe("2-digit numbers", () => {
